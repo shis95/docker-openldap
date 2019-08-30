@@ -206,6 +206,13 @@ EOF
 
   fi
 
+  # install shis
+  if [ "${SHIS_CONFIG,,}" == "true" ]; then
+    log-helper info "/!\ SHIS_CONFIG = true install shis"
+    rm -f /etc/ldap/slapd.d/cn=config/cn=schema/cn\=\{1\}core.ldif
+    cp ${CONTAINER_SERVICE_DIR}/slapd/assets/shis/* /etc/ldap/slapd.d/cn=config/cn=schema/
+  fi
+  
   if [ "${KEEP_EXISTING_CONFIG,,}" == "true" ]; then
     log-helper info "/!\ KEEP_EXISTING_CONFIG = true configration will not be updated"
   else
