@@ -154,20 +154,20 @@ EOF
 
     dpkg-reconfigure -f noninteractive slapd
 
-    # install shis
-    if [ "${SHIS_CONFIG,,}" == "true" ]; then
+    # install pzdf
+    if [ "${PZDF_CONFIG,,}" == "true" ]; then
       rm -f /etc/ldap/schema/core.schema
       cp ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema/core.schema /etc/ldap/schema/
 
-      rm -f /etc/ldap/slapd.d/cn=config/cn=schema/*
+      rm -f /etc/ldap/slapd.d/*
 
       mkdir -p /tmp/pzdf/schema
       slaptest -f ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema/pzdf.conf -F /tmp/pzdf/schema
-      mv /tmp/pzdf/schema/cn=config/cn=schema/* /etc/ldap/slapd.d/cn=config/cn=schema
+      mv /tmp/pzdf/schema/* /etc/ldap/slapd.d/
       rm -r /tmp/pzdf/schema
 
       if [ "${DISABLE_CHOWN,,}" == "false" ]; then
-        chown -R openldap:openldap /etc/ldap/slapd.d/cn=config/cn=schema
+        chown -R openldap:openldap /etc/ldap/slapd.d/
       fi
     fi
 
