@@ -154,16 +154,17 @@ EOF
 
     dpkg-reconfigure -f noninteractive slapd
 
-    # install shis
+    # install pzdf
     if [ "${PZDF_CONFIG,,}" == "true" ]; then
 
       log-helper info "Switching schema to pzdf..."
-      rm -f /etc/ldap/schema/core.schema
-      cp ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema/core.schema /etc/ldap/schema/
 
+      mkdir /opt/pzdf
+
+      cp ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema/core.schema /etc/ldap/schema/
     fi
 
-    rm -f ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema/core.schema
+    rm ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema/core.schema
 
     # RFC2307bis schema
     if [ "${LDAP_RFC2307BIS_SCHEMA,,}" == "true" ]; then
@@ -290,6 +291,7 @@ EOF
       # convert schemas to ldif
       SCHEMAS=""
       for f in $(find ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema -name \*.schema -type f|sort); do
+        log-helper debug "Processing file schema ${f}"
         SCHEMAS="$SCHEMAS ${f}"
       done
       ${CONTAINER_SERVICE_DIR}/slapd/assets/schema-to-ldif.sh "$SCHEMAS"

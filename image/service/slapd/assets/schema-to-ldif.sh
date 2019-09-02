@@ -24,6 +24,11 @@ for schema in ${SCHEMAS} ; do
     echo "include ${schema}" >> convert.dat
 done
 
+log-helper info "cp schema to pzdf..."
+cp /etc/ldap/schema/core.schema /opt/pzdf
+log-helper info "cp convert to pzdf..."
+cp convert.dat /opt/pzdf
+
 slaptest -f convert.dat -F .
 
 if [ $? -ne 0 ] ; then
