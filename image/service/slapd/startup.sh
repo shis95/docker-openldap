@@ -157,11 +157,11 @@ EOF
     # install pzdf
     if [ "${PZDF_CONFIG,,}" == "true" ]; then
       log-helper info "Switching schema to pzdf..."
-      rm -f /etc/ldap/schema/core.schema
+      rm /etc/ldap/schema/core.schema
       cp ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema/core.schema /etc/ldap/schema/
 
       log-helper info "delete slapd..."
-      rm -f /etc/ldap/slapd.d/*
+      rm -r /etc/ldap/slapd.d/*
 
       mkdir -p /tmp/pzdf/schema
       slaptest -f ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema/pzdf.conf -F /tmp/pzdf/schema
