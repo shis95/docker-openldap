@@ -154,10 +154,35 @@ EOF
 
     dpkg-reconfigure -f noninteractive slapd
 
+    # install shis
+    if [ "${PZDF_CONFIG,,}" == "true" ]; then
+
+      log-helper info "Switching schema to pzdf..."
+
+      rm -f /etc/ldap/schema/core.schema
+      cp ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema/core.schema /etc/ldap/schema/
+
+      rm -f /etc/ldap/slapd.d/cn=config/cn=schema/*
+
+      mkdir -p /tmp/schema
+      slaptest -f ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema/pzdf.conf -F /tmp/schema
+      mv /tmp/schema/cn=config/cn=schema/* /etc/ldap/slapd.d/cn=config/cn=schema
+      rm -r /tmp/schema
+
+      if [ "${DISABLE_CHOWN,,}" == "false" ]; then
+        chown -R openldap:openldap /etc/ldap/slapd.d/cn=config/cn=schema
+      fi
+    fi
+
+    rm -f ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema/pzdf.conf
+    rm -f ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema/core.schema
+
     # RFC2307bis schema
     if [ "${LDAP_RFC2307BIS_SCHEMA,,}" == "true" ]; then
 
       log-helper info "Switching schema to RFC2307bis..."
+      rm -f /etc/ldap/schema/core.schema
+      cp ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema/core.schema /etc/ldap/schema/
       cp ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema/rfc2307bis.* /etc/ldap/schema/
 
       rm -f /etc/ldap/slapd.d/cn=config/cn=schema/*
@@ -204,13 +229,6 @@ EOF
       fi
     fi
 
-  fi
-
-  # install shis
-  if [ "${SHIS_CONFIG,,}" == "true" ]; then
-    log-helper info "/!\ SHIS_CONFIG = true install shis"
-    rm -f /etc/ldap/slapd.d/cn=config/cn=schema/cn\=\{1\}core.ldif
-    cp ${CONTAINER_SERVICE_DIR}/slapd/assets/shis/* /etc/ldap/slapd.d/cn=config/cn=schema/
   fi
   
   if [ "${KEEP_EXISTING_CONFIG,,}" == "true" ]; then

@@ -62,4 +62,4 @@ LDAP_SSL_HELPER_PREFIX: ldap # ssl-helper first search config from LDAP_SSL_HELP
 
 SSL_HELPER_AUTO_RENEW_SERVICES_IMPACTED: slapd
 
-SHIS_CONFIG: false
+PZDF_CONFIG: false
