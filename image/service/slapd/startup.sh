@@ -154,19 +154,32 @@ EOF
 
     dpkg-reconfigure -f noninteractive slapd
 
-    # install pzdf
-    if [ "${PZDF_CONFIG,,}" == "true" ]; then
-      log-helper info "Switching schema to pzdf..."
-      mkdir /opt/pzdf
-    else
-      rm ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema/core.schema
+    # install shis
+    if [ "${SHIS_CONFIG,,}" == "true" ]; then
+      rm -f /etc/ldap/schema/core.schema
+      cp ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema/core.schema /etc/ldap/schema/
+
+      rm -f /etc/ldap/slapd.d/cn=config/cn=schema/*
+
+      mkdir -p /tmp/pzdf/schema
+      slaptest -f ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema/pzdf.conf -F /tmp/pzdf/schema
+      mv /tmp/pzdf/schema/cn=config/cn=schema/* /etc/ldap/slapd.d/cn=config/cn=schema
+      rm -r /tmp/pzdf/schema
+
+      if [ "${DISABLE_CHOWN,,}" == "false" ]; then
+        chown -R openldap:openldap /etc/ldap/slapd.d/cn=config/cn=schema
+      fi
     fi
+
+    rm ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema/pzdf.conf
+    rm ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema/core.schema
 
     # RFC2307bis schema
     if [ "${LDAP_RFC2307BIS_SCHEMA,,}" == "true" ]; then
 
       log-helper info "Switching schema to RFC2307bis..."
-
+      rm -f /etc/ldap/schema/core.schema
+      cp ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema/core.schema /etc/ldap/schema/
       cp ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema/rfc2307bis.* /etc/ldap/schema/
 
       rm -f /etc/ldap/slapd.d/cn=config/cn=schema/*
@@ -287,10 +300,9 @@ EOF
       # convert schemas to ldif
       SCHEMAS=""
       for f in $(find ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema -name \*.schema -type f|sort); do
-        log-helper debug "Processing file schema ${f}"
         SCHEMAS="$SCHEMAS ${f}"
       done
-      ${CONTAINER_SERVICE_DIR}/slapd/assets/schema-to-ldif.sh "$SCHEMAS" "${PZDF_CONFIG,,}"
+      ${CONTAINER_SERVICE_DIR}/slapd/assets/schema-to-ldif.sh "$SCHEMAS"
 
       # add converted schemas
       for f in $(find ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema -name \*.ldif -type f|sort); do

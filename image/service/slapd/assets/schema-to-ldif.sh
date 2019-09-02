@@ -5,13 +5,11 @@
 log-helper level eq trace && set -x
 
 SCHEMAS=$1
-PZDF_CONFIG=$2
 
 tmpd=`mktemp -d`
 pushd ${tmpd} >>/dev/null
-if [ "${PZDF_CONFIG,,}" == "false" ]; then
-  echo "include /etc/ldap/schema/core.schema" >> convert.dat
-fi
+
+echo "include /etc/ldap/schema/core.schema" >> convert.dat
 echo "include /etc/ldap/schema/cosine.schema" >> convert.dat
 echo "include /etc/ldap/schema/inetorgperson.schema" >> convert.dat
 
@@ -25,11 +23,6 @@ fi
 for schema in ${SCHEMAS} ; do
     echo "include ${schema}" >> convert.dat
 done
-
-log-helper info "cp schema to pzdf..."
-cp /etc/ldap/schema/core.schema /opt/pzdf
-log-helper info "cp convert to pzdf..."
-cp convert.dat /opt/pzdf
 
 slaptest -f convert.dat -F .
 
