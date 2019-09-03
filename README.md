@@ -1,9 +1,9 @@
 # shis-ldap
 
-**A docker image to run OpenLDAP.**
+**A docker image to run shis OpenLDAP.**
 
 > OpenLDAP website : [www.openldap.org](http://www.openldap.org/) <br>
-> Latest release: 1.2.5 - OpenLDAP 2.4.47 -  [Changelog](CHANGELOG.md) | [Docker Hub](https://hub.docker.com/r/osixia/openldap/) 
+> OpenLDAP 2.4.47  | 引用 [osixia/openldap](https://hub.docker.com/r/osixia/openldap/) 
 
 - [shis-ldap](#shis-ldap)
 	- [Contributing](#contributing)
