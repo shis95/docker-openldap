@@ -154,26 +154,6 @@ EOF
 
     dpkg-reconfigure -f noninteractive slapd
 
-    # install pzdf
-    if [ "${PZDF_CONFIG,,}" == "true" ]; then
-      log-helper info "Switching schema to pzdf..."
-      rm /etc/ldap/schema/core.schema
-      cp ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema/core.schema /etc/ldap/schema/
-
-      log-helper info "delete core.ldif..."
-      rm /etc/ldap/slapd.d/cn=config/cn=schema/cn\=\{0\}core.ldif
-
-      mkdir -p /tmp/pzdf/schema
-      slaptest -f ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema/pzdf.conf -F /tmp/pzdf/schema
-      mv /tmp/pzdf/schema/cn=config/cn=schema/cn\=\{0\}core.ldif /etc/ldap/slapd.d/cn=config/cn=schema/
-      rm -r /tmp/pzdf/schema
-      chown -R openldap:openldap /etc/ldap/slapd.d/cn=config/cn=schema/
-      
-    fi
-
-    rm ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema/pzdf.conf
-    rm ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema/core.schema
-
     # RFC2307bis schema
     if [ "${LDAP_RFC2307BIS_SCHEMA,,}" == "true" ]; then
 
@@ -193,6 +173,26 @@ EOF
     fi
 
     rm ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema/rfc2307bis.*
+
+    # install pzdf
+    if [ "${PZDF_CONFIG,,}" == "true" ]; then
+      log-helper info "Switching schema to pzdf..."
+      rm /etc/ldap/schema/core.schema
+      cp ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema/core.schema /etc/ldap/schema/
+
+      log-helper info "delete core.ldif..."
+      rm /etc/ldap/slapd.d/cn=config/cn=schema/cn\=\{0\}core.ldif
+
+      mkdir -p /tmp/pzdf/schema
+      slaptest -f ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema/pzdf.conf -F /tmp/pzdf/schema
+      mv /tmp/pzdf/schema/cn=config/cn=schema/cn\=\{0\}core.ldif /etc/ldap/slapd.d/cn=config/cn=schema/
+      rm -r /tmp/pzdf/schema
+      chown -R openldap:openldap /etc/ldap/slapd.d/cn=config/cn=schema/
+      
+    fi
+
+    rm ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema/pzdf.conf
+    rm ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema/core.schema
 
   #
   # Error: the database directory (/var/lib/ldap) is empty but not the config directory (/etc/ldap/slapd.d)
