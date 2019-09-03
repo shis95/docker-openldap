@@ -160,14 +160,14 @@ EOF
       rm /etc/ldap/schema/core.schema
       cp ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema/core.schema /etc/ldap/schema/
 
-      log-helper info "delete slapd..."
-      rm -r /etc/ldap/slapd.d/*
+      log-helper info "delete core.ldif..."
+      rm /etc/ldap/slapd.d/cn=config/cn=schema/cn=cn\=\{0\}core.ldif
 
       mkdir -p /tmp/pzdf/schema
       slaptest -f ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema/pzdf.conf -F /tmp/pzdf/schema
-      mv /tmp/pzdf/schema/* /etc/ldap/slapd.d/
+      mv /tmp/pzdf/schema/cn=config/cn=schema/cn=cn\=\{0\}core.ldif /etc/ldap/slapd.d/cn=config/cn=schema/
       rm -r /tmp/pzdf/schema
-      chown -R openldap:openldap /etc/ldap/slapd.d/
+      chown -R openldap:openldap /etc/ldap/slapd.d/cn=config/cn=schema/
       
     fi
 
