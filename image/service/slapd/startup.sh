@@ -332,7 +332,7 @@ EOF
 
       # install pzdf base
       if [ "${PZDF_CONFIG,,}" == "true" ]; then
-        ldap_add_or_modify "${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/ldif/pzdf/pzdf_base.ldif"
+        ldap_add_or_modify "${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/ldif/pzdf/08-pzdf_base.ldif"
       fi
 
       # read only user
