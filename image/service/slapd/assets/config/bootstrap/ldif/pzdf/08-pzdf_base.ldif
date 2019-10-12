@@ -1,0 +1,6 @@
+dn: {{ LDAP_BASE_DN }}
+dc: pzdf
+ou: pzdf
+department: 平治东方
+objectClass: dcobject
+objectClass: organizationalUnit

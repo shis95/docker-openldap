@@ -188,7 +188,7 @@ EOF
       mv /tmp/pzdf/schema/cn=config/cn=schema/cn\=\{0\}core.ldif /etc/ldap/slapd.d/cn=config/cn=schema/
       rm -r /tmp/pzdf/schema
       chown -R openldap:openldap /etc/ldap/slapd.d/cn=config/cn=schema/
-      
+
     fi
 
     rm ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema/pzdf.conf
@@ -329,6 +329,11 @@ EOF
         log-helper debug "Processing file ${f}"
         ldap_add_or_modify "$f"
       done
+
+      # install pzdf base
+      if [ "${PZDF_CONFIG,,}" == "true" ]; then
+        ldap_add_or_modify "${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/ldif/pzdf/pzdf_base.ldif"
+      fi
 
       # read only user
       if [ "${LDAP_READONLY_USER,,}" == "true" ]; then
