@@ -1,12 +1,4 @@
 dn: {{ LDAP_BASE_DN }}
 changetype: modify
-delete: organization
--
-add: objectclass
-objectclass: organizationalUnit
--
 add: ou
 ou: pzdf
--
-add: department
-department: 平治东方
