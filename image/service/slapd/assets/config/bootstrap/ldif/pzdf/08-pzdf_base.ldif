@@ -1,5 +1,7 @@
 dn: {{ LDAP_BASE_DN }}
 changetype: modify
+delete: organization
+-
 add: objectclass
 objectclass: organizationalUnit
 -
