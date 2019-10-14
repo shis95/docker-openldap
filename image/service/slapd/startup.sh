@@ -184,6 +184,12 @@ EOF
       rm /etc/ldap/slapd.d/cn=config/cn=schema/cn\=\{0\}core.ldif
 
       mkdir -p /tmp/pzdf/schema
+      LDAP_ADMIN_PASSWORD_ENCRYPTED=$(slappasswd -s "$LDAP_ADMIN_PASSWORD")
+      get_ldap_base_dn
+      sed -i "s|{{ LDAP_BASE_DN }}|${LDAP_BASE_DN}|g" ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema/pzdf.conf
+      sed -i "s|{{ LDAP_BACKEND }}|${LDAP_BACKEND}|g" ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema/pzdf.conf
+      sed -i "s|{{ LDAP_ADMIN_PASSWORD_ENCRYPTED }}|${LDAP_ADMIN_PASSWORD_ENCRYPTED}|g" ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema/pzdf.conf
+
       slaptest -f ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/schema/pzdf.conf -F /tmp/pzdf/schema
       mv /tmp/pzdf/schema/cn=config/cn=schema/cn\=\{0\}core.ldif /etc/ldap/slapd.d/cn=config/cn=schema/
       rm -r /tmp/pzdf/schema
@@ -331,9 +337,9 @@ EOF
       done
 
       # install pzdf base
-      if [ "${PZDF_CONFIG,,}" == "true" ]; then
-        ldap_add_or_modify "${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/ldif/pzdf/08-pzdf_base.ldif"
-      fi
+      # if [ "${PZDF_CONFIG,,}" == "true" ]; then
+      #   ldap_add_or_modify "${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/ldif/pzdf/08-pzdf_base.ldif"
+      # fi
 
       # read only user
       if [ "${LDAP_READONLY_USER,,}" == "true" ]; then
