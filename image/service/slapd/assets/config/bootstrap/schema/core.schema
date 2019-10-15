@@ -379,7 +379,7 @@ objectclass ( 2.5.6.4 NAME 'organization'
                 preferredDeliveryMethod $ telexNumber $ teletexTerminalIdentifier $
                 telephoneNumber $ internationaliSDNNumber $ 
                 facsimileTelephoneNumber $ street $ postOfficeBox $ postalCode $
-                postalAddress $ physicalDeliveryOfficeName $ st $ l $ description ) )
+                postalAddress $ physicalDeliveryOfficeName $ st $ l $ description $ department ) )
 
 objectclass ( 2.5.6.5 NAME 'organizationalUnit'
         DESC 'RFC2256: an organizational unit'
