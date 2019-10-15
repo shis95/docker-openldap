@@ -1,0 +1,5 @@
+dn: dc=pzdf,dc=comr
+changetype: add
+objectClass: organizationalUnit
+ou: pzdf
+department: 平治东方

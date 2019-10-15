@@ -1,4 +1,0 @@
-dn: {{ LDAP_BASE_DN }}
-changetype: modify
-add: ou
-ou: pzdf
