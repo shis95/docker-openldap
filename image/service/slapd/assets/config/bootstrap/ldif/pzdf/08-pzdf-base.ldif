@@ -1,0 +1,4 @@
+dn: {{ LDAP_BASE_DN }}
+changetype: modify
+add: department
+department: {{ PZDF_BASE_DEPARTMENT }}

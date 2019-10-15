@@ -336,6 +336,15 @@ EOF
         ldap_add_or_modify "$f"
       done
 
+      if [ "${PZDF_CONFIG,,}" == "true" ]; then
+
+        log-helper info "Switching to pzdf base..."
+        sed -i "s|{{ LDAP_BASE_DN }}|${LDAP_BASE_DN}|g" ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/ldif/pzdf/08-pzdf-base.ldif
+        sed -i "s|{{ PZDF_BASE_DEPARTMENT }}|${PZDF_BASE_DEPARTMENT}|g" ${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/ldif/pzdf/08-pzdf-base.ldif
+        ldap_add_or_modify "${CONTAINER_SERVICE_DIR}/slapd/assets/config/bootstrap/ldif/pzdf/08-pzdf-base.ldif"
+
+      fi
+
       # read only user
       if [ "${LDAP_READONLY_USER,,}" == "true" ]; then
         log-helper info "Add read only user..."
